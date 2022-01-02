@@ -28,6 +28,11 @@ func (uc *CreateUserUseCase) execute(data *dtos.CreateUserDTO) (*dtos.UserDTO, *
 	if data.Email == "" || !reg.MatchString(data.Email) {
 		return nil, usecase.BadRequestError("invalid user email")
 	}
+	if user, err := uc.repo.FindByEmail(data.Email); err != nil {
+		return nil, usecase.ServerError()
+	} else if user != nil {
+		return nil, usecase.BadRequestError("the email is already taken")
+	}
 
 	user, err := uc.repo.CreateUser(data)
 	if err != nil {

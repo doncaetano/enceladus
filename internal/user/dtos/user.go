@@ -18,4 +18,5 @@ type CreateUserDTO struct {
 
 type Repo interface {
 	CreateUser(data *CreateUserDTO) (*UserDTO, error)
+	FindByEmail(email string) (*UserDTO, error)
 }
