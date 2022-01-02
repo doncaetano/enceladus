@@ -1,21 +1,21 @@
 package dtos
 
 type UserDTO struct {
-	id        string `json:"id"`
-	firstName string `json:"firstName"`
-	lastName  string `json:"lastName"`
-	email     string `json:"lastName"`
-	isActive  bool   `json:"isActive"`
-	createdAt string `json:"createdAt"`
-	updatedAt string `json:"updatedAt"`
+	Id        string `json:"id"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email"`
+	IsActive  bool   `json:"isActive"`
+	CreatedAt string `json:"createdAt"`
+	UpdatedAt string `json:"updatedAt"`
 }
 
 type CreateUserDTO struct {
-	firstName string `json:"firstName"`
-	lastName  string `json:"lastName"`
-	email     string `json:"lastName"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email"`
 }
 
 type Repo interface {
-	CreateUser()
+	CreateUser(data *CreateUserDTO) (*UserDTO, error)
 }

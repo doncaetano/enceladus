@@ -1,0 +1,2 @@
+[ ] - create a package with the logic to validate data fields (i.e. joi, yup, zod)
+[ ] - standardize data validation using the package

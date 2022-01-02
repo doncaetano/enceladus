@@ -1,18 +1,38 @@
 package createuser
 
-import "github.com/rhuancaetano/enceladus/internal/user/dtos"
+import (
+	"regexp"
+
+	"github.com/rhuancaetano/enceladus/internal/shared/usecase"
+	"github.com/rhuancaetano/enceladus/internal/user/dtos"
+)
 
 type CreateUserUseCase struct {
-	repo *dtos.Repo
+	repo dtos.Repo
 }
 
-func NewCreateUserUseCase(repo dtos.Repo) *CreateUserUseCase {
+func NewCreateUserUseCase(r dtos.Repo) *CreateUserUseCase {
 	return &CreateUserUseCase{
-		repo: &repo,
+		repo: r,
 	}
 }
 
-func (uc *CreateUserUseCase) execute(userData *dtos.CreateUserDTO) error {
+func (uc *CreateUserUseCase) execute(data *dtos.CreateUserDTO) (*dtos.UserDTO, *usecase.UseCaseError) {
+	if data.FirstName == "" {
+		return nil, usecase.BadRequestError("invalid user first name")
+	}
+	if data.LastName == "" {
+		return nil, usecase.BadRequestError("invalid user last name")
+	}
+	reg := regexp.MustCompile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)")
+	if data.Email == "" || !reg.MatchString(data.Email) {
+		return nil, usecase.BadRequestError("invalid user email")
+	}
 
-	return nil
+	user, err := uc.repo.CreateUser(data)
+	if err != nil {
+		return nil, usecase.ServerError()
+	}
+
+	return user, nil
 }

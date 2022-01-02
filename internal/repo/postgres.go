@@ -23,7 +23,7 @@ func GetPostgresDatabase() *sql.DB {
 	env := config.GetEnvironment()
 
 	if db == nil {
-		db, err = sql.Open("postgres", fmt.Sprintf("postgres://%s:%s@localhost/%s", env.POSTGRES_USER, env.POSTGRES_PASSWORD, env.POSTGRES_DB))
+		db, err = sql.Open("postgres", fmt.Sprintf("postgres://%s:%s@localhost/%s?sslmode=disable", env.POSTGRES_USER, env.POSTGRES_PASSWORD, env.POSTGRES_DB))
 		if err != nil {
 			log.Println("Could not connect to Postgres")
 			log.Fatal(err.Error())
