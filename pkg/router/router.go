@@ -92,7 +92,11 @@ func (r *Router) addRouteHandler(stringPath string, handler Handler, method Meth
 
 	if path.IsRoot() {
 		route := r.GetRoute(path)
-		route.addHandler(path, handler, method)
+		err := route.addHandler(path, handler, method)
+		if err != nil {
+			return err
+		}
+		return nil
 	}
 
 	if path.IsParam() {
@@ -102,6 +106,7 @@ func (r *Router) addRouteHandler(stringPath string, handler Handler, method Meth
 		if err != nil {
 			return err
 		}
+		return nil
 	}
 
 	if isValid, _ := path.IsRouteValid(); isValid {
