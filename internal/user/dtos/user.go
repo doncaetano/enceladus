@@ -16,9 +16,18 @@ type CreateUserDTO struct {
 	Email     string `json:"email"`
 }
 
+type UpdateUserDTO struct {
+	Id        string `json:"id"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email"`
+	IsActive  bool   `json:"isActive"`
+}
+
 type Repo interface {
 	CreateUser(data *CreateUserDTO) (*UserDTO, error)
 	FindByEmail(email string) (*UserDTO, error)
 	FindById(id string) (*UserDTO, error)
+	UpdateUser(data *UpdateUserDTO) (*UserDTO, error)
 	DeleteUser(id string) error
 }

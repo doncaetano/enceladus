@@ -106,3 +106,31 @@ func (ur *PostgresUserRepo) CreateUser(data *dtos.CreateUserDTO) (*dtos.UserDTO,
 
 	return &user, nil
 }
+
+func (ur *PostgresUserRepo) UpdateUser(data *dtos.UpdateUserDTO) (*dtos.UserDTO, error) {
+	rows, err := ur.db.Query(`
+    UPDATE "user"
+    SET first_name=$2,
+        last_name=$3,
+        email=$4,
+        is_active=$5
+    WHERE id=$1
+    RETURNING id, first_name, last_name, email, is_active, created_at, updated_at;
+  `, data.Id, data.FirstName, data.LastName, data.Email, data.IsActive)
+
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+	defer rows.Close()
+
+	var user dtos.UserDTO
+	rows.Next()
+	err = rows.Scan(&user.Id, &user.FirstName, &user.LastName, &user.Email, &user.IsActive, &user.CreatedAt, &user.UpdatedAt)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	return &user, nil
+}

@@ -6,6 +6,7 @@ import (
 	"github.com/rhuancaetano/enceladus/internal/user/usecases/createuser"
 	"github.com/rhuancaetano/enceladus/internal/user/usecases/deleteuser"
 	"github.com/rhuancaetano/enceladus/internal/user/usecases/getuser"
+	"github.com/rhuancaetano/enceladus/internal/user/usecases/updateuser"
 	"github.com/rhuancaetano/enceladus/pkg/router"
 )
 
@@ -26,6 +27,9 @@ func GetRouter() (*router.Router, error) {
 		log.Fatal(err.Error())
 	}
 	if err = router.Delete("/:id", deleteuser.DeleteUserController); err != nil {
+		log.Fatal(err.Error())
+	}
+	if err = router.Put("/", updateuser.UpdateUserController); err != nil {
 		log.Fatal(err.Error())
 	}
 
