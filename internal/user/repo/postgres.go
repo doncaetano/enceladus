@@ -72,6 +72,17 @@ func (ur *PostgresUserRepo) FindById(id string) (*dtos.UserDTO, error) {
 	return nil, nil
 }
 
+func (ur *PostgresUserRepo) DeleteUser(id string) error {
+	_, err := ur.db.Query(`DELETE FROM "user" WHERE id = $1;`, id)
+
+	if err != nil {
+		log.Println(err.Error())
+		return err
+	}
+
+	return nil
+}
+
 func (ur *PostgresUserRepo) CreateUser(data *dtos.CreateUserDTO) (*dtos.UserDTO, error) {
 	rows, err := ur.db.Query(`
     INSERT INTO "user" (first_name, last_name, email)
