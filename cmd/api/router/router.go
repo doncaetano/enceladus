@@ -13,7 +13,7 @@ func Router() *router.Router {
 		log.Fatal(err.Error())
 	}
 	if r, e := userrouter.GetRouter(); e == nil {
-		rootRouter.Use("/user", r)
+		rootRouter.Use("/users", r)
 	} else {
 		log.Fatal(e.Error())
 	}
