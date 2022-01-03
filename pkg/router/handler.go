@@ -3,7 +3,7 @@ package router
 import "net/http"
 
 type Context struct {
-	params []string
+	Params map[string]string
 }
 
 type Handler func(http.ResponseWriter, *http.Request, *Context)

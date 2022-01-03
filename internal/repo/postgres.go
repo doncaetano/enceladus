@@ -14,7 +14,12 @@ var db *sql.DB
 
 func InitDatabase() {
 	fmt.Println("Connecting to Postgres...")
-	GetPostgresDatabase()
+	db := GetPostgresDatabase()
+	err := db.Ping()
+	if err != nil {
+		log.Println("Could not connect to Postgres")
+		log.Fatal(err.Error())
+	}
 }
 
 func GetPostgresDatabase() *sql.DB {

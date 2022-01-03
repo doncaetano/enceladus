@@ -33,6 +33,20 @@ func (p *Path) IsValid() (bool, error) {
 	if match, _ := regexp.MatchString("^(/:?[a-z0-9]+(-[a-z0-9]+)*?)*/?$", path); !match {
 		return false, errors.New("is not a valid rest path")
 	}
+
+	matchList := regexp.MustCompile("(:[^/]+)").FindAllString(path, 11)
+	matchSize := len(matchList)
+	if matchSize > 10 {
+		return false, errors.New("the maximum number of route parameters is 10")
+	}
+	var params = make(map[string]bool)
+	for j := 0; j < matchSize; j++ {
+		if _, hasParameter := params[matchList[j]]; hasParameter {
+			return false, errors.New("it is not possible to use parameters with same name")
+		}
+		params[matchList[j]] = true
+	}
+
 	return true, nil
 }
 

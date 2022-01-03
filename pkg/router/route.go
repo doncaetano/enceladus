@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"regexp"
 	"sort"
+	"strings"
 )
 
 type Route struct {
@@ -41,9 +42,10 @@ func (r *Route) addDynamicPathHandler(path Path, handler Handler, method Method)
 }
 
 type DynamicRoutePattern struct {
-	path    string
-	pattern *regexp.Regexp
-	handler map[Method]Handler
+	params     []string
+	pathToSort string
+	pattern    *regexp.Regexp
+	handler    map[Method]Handler
 }
 
 func getMethod(stringMethod string) (Method, error) {
@@ -65,14 +67,24 @@ func (r *Route) insertHandlers(serve *http.ServeMux) {
 		reg := regexp.MustCompile("(:[^/]+)")
 		i := 0
 		for path, handler := range r.dynamicPaths {
+			matchList := regexp.MustCompile("(:[^/]+)").FindAllString(path.String(), 11)
+			matchSize := len(matchList)
+			var params = make([]string, matchSize)
+			for j := 0; j < matchSize; j++ {
+				params[j] = strings.ReplaceAll(matchList[j], ":", "")
+			}
+
 			dynamicPathsPatternList[i] = DynamicRoutePattern{
-				path:    reg.ReplaceAllString(path.String(), "|"),
-				pattern: regexp.MustCompile("^" + reg.ReplaceAllString(path.String(), "([^/]+)") + "$"),
-				handler: handler,
+				params:     params,
+				pathToSort: reg.ReplaceAllString(path.String(), "|"),
+				pattern:    regexp.MustCompile("^" + reg.ReplaceAllString(path.String(), "([^/]+)") + "$"),
+				handler:    handler,
 			}
 			i++
 		}
-		sort.Slice(dynamicPathsPatternList, func(i, j int) bool { return dynamicPathsPatternList[i].path > dynamicPathsPatternList[j].path })
+		sort.Slice(dynamicPathsPatternList, func(i, j int) bool {
+			return dynamicPathsPatternList[i].pathToSort > dynamicPathsPatternList[j].pathToSort
+		})
 
 		serve.HandleFunc(r.path.String(), func(response http.ResponseWriter, request *http.Request) {
 			method, err := getMethod(request.Method)
@@ -86,12 +98,11 @@ func (r *Route) insertHandlers(serve *http.ServeMux) {
 			for i = 0; i < len(dynamicPathsPatternList); i++ {
 				match := dynamicPathsPatternList[i].pattern.FindStringSubmatch(request.URL.Path)
 				matchSize := len(match)
-				fmt.Println(match)
 
 				if matchSize > 1 {
-					var params = make([]string, matchSize-1)
+					params := make(map[string]string)
 					for j := 1; j < matchSize; j++ {
-						params[j-1] = match[j]
+						params[dynamicPathsPatternList[i].params[j-1]] = match[j]
 					}
 
 					if _, hasHandler := dynamicPathsPatternList[i].handler[method]; !hasHandler {
@@ -102,7 +113,7 @@ func (r *Route) insertHandlers(serve *http.ServeMux) {
 
 					handler := dynamicPathsPatternList[i].handler[method]
 					handler(response, request, &Context{
-						params: params,
+						Params: params,
 					})
 					return
 				}
