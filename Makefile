@@ -1,5 +1,4 @@
 dev-start:
-	docker-compose up -f ./docker-compose.dev.yml -d
-
+	docker-compose --file docker-compose.dev.yml up -d
 dev-stop:
-	docker-compose stop -f ./docker-compose.dev.yml
+	docker-compose --file docker-compose.dev.yml stop
