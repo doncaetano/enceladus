@@ -85,10 +85,10 @@ func (ur *PostgresUserRepo) DeleteUser(id string) error {
 
 func (ur *PostgresUserRepo) CreateUser(data *dtos.CreateUserDTO) (*dtos.UserDTO, error) {
 	rows, err := ur.db.Query(`
-    INSERT INTO "user" (first_name, last_name, email)
-    VALUES ($1, $2, $3)
+    INSERT INTO "user" (first_name, last_name, email, password)
+    VALUES ($1, $2, $3, $4)
     RETURNING id, first_name, last_name, email, is_active, created_at, updated_at;
-  `, data.FirstName, data.LastName, data.Email)
+  `, data.FirstName, data.LastName, data.Email, data.Password)
 
 	if err != nil {
 		log.Println(err.Error())
@@ -113,10 +113,11 @@ func (ur *PostgresUserRepo) UpdateUser(data *dtos.UpdateUserDTO) (*dtos.UserDTO,
     SET first_name=$2,
         last_name=$3,
         email=$4,
-        is_active=$5
+        password=$5,
+        is_active=$6
     WHERE id=$1
     RETURNING id, first_name, last_name, email, is_active, created_at, updated_at;
-  `, data.Id, data.FirstName, data.LastName, data.Email, data.IsActive)
+  `, data.Id, data.FirstName, data.LastName, data.Email, data.Password, data.IsActive)
 
 	if err != nil {
 		log.Println(err.Error())

@@ -1,10 +1,12 @@
 package updateuser
 
 import (
+	"log"
 	"regexp"
 
 	"github.com/rhuancaetano/enceladus/internal/shared/usecase"
 	"github.com/rhuancaetano/enceladus/internal/user/dtos"
+	"github.com/rhuancaetano/enceladus/internal/utils/encrypt"
 )
 
 type UpdateUserUseCase struct {
@@ -40,7 +42,6 @@ func (uc *UpdateUserUseCase) execute(data *dtos.UpdateUserDTO) (*dtos.UserDTO, *
 	if data.Email == "" || !emailReg.MatchString(data.Email) {
 		return nil, usecase.BadRequestError("invalid user email")
 	}
-
 	if userById.Email != data.Email {
 		userByEmail, findByEmailError := uc.repo.FindByEmail(data.Email)
 		if findByEmailError != nil {
@@ -48,6 +49,16 @@ func (uc *UpdateUserUseCase) execute(data *dtos.UpdateUserDTO) (*dtos.UserDTO, *
 		} else if userByEmail != nil {
 			return nil, usecase.BadRequestError("the email is already taken")
 		}
+	}
+	if len(data.Password) < 8 || len(data.Password) > 16 {
+		return nil, usecase.BadRequestError("invalid password")
+	}
+
+	if hashedPassword, err := encrypt.EncryptPassword(data.Password); err != nil {
+		log.Println(err.Error())
+		return nil, usecase.ServerError()
+	} else {
+		data.Password = hashedPassword
 	}
 
 	user, err := uc.repo.UpdateUser(data)

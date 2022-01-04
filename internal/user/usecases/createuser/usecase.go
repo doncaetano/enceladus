@@ -1,10 +1,12 @@
 package createuser
 
 import (
+	"log"
 	"regexp"
 
 	"github.com/rhuancaetano/enceladus/internal/shared/usecase"
 	"github.com/rhuancaetano/enceladus/internal/user/dtos"
+	"github.com/rhuancaetano/enceladus/internal/utils/encrypt"
 )
 
 type CreateUserUseCase struct {
@@ -32,6 +34,16 @@ func (uc *CreateUserUseCase) execute(data *dtos.CreateUserDTO) (*dtos.UserDTO, *
 		return nil, usecase.ServerError()
 	} else if user != nil {
 		return nil, usecase.BadRequestError("the email is already taken")
+	}
+	if len(data.Password) < 8 || len(data.Password) > 16 {
+		return nil, usecase.BadRequestError("invalid password")
+	}
+
+	if hashedPassword, err := encrypt.EncryptPassword(data.Password); err != nil {
+		log.Println(err.Error())
+		return nil, usecase.ServerError()
+	} else {
+		data.Password = hashedPassword
 	}
 
 	user, err := uc.repo.CreateUser(data)
