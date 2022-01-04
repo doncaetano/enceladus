@@ -156,3 +156,30 @@ func (ur *PostgresAuthRepo) DeactivateAccessTokenByRefreshTokenId(refreshTokenId
 
 	return nil
 }
+
+func (ur *PostgresAuthRepo) GetViewerByUserId(id string) (*dtos.ViewerDTO, error) {
+	rows, err := ur.db.Query(`
+    SELECT id, first_name, last_name, email
+    FROM "user"
+    WHERE id = $1;
+`, id)
+
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		var user dtos.ViewerDTO
+		err = rows.Scan(&user.Id, &user.FirstName, &user.LastName, &user.Email)
+		if err != nil {
+			log.Println(err.Error())
+			return nil, err
+		}
+
+		return &user, nil
+	}
+
+	return nil, nil
+}

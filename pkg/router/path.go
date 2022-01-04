@@ -30,7 +30,7 @@ func (p *Path) IsValid() (bool, error) {
 	if path[0] != '/' {
 		return false, errors.New("path should start with '/'")
 	}
-	if match, _ := regexp.MatchString("^(/:?[a-z0-9]+(-[a-z0-9]+)*?)*/?$", path); !match {
+	if match, _ := regexp.MatchString("^(/:?[a-z0-9A-Z]+(-[a-z0-9A-Z]+)*?)*/?$", path); !match {
 		return false, errors.New("is not a valid rest path")
 	}
 
@@ -60,7 +60,7 @@ func (p *Path) IsRouteValid() (bool, error) {
 	if path[0] != '/' {
 		return false, errors.New("path should start with '/'")
 	}
-	if match, _ := regexp.MatchString("^(/[a-z0-9]+(-[a-z0-9]+)*?)*/?$", path); !match {
+	if match, _ := regexp.MatchString("^(/[a-z0-9A-Z]+(-[a-z0-9A-Z]+)*?)*/?$", path); !match {
 		return false, errors.New("is not a valid rest path")
 	}
 	return true, nil
@@ -69,7 +69,7 @@ func (p *Path) IsRouteValid() (bool, error) {
 func (p *Path) IsParam() bool {
 	path := string(*p)
 
-	if match, _ := regexp.MatchString("^/:[a-z]+(/:?[a-z0-9]+(-[a-z0-9]+)*?)*/?$", path); match {
+	if match, _ := regexp.MatchString("^/:[a-zA-Z]+(/:?[a-z0-9A-Z]+(-[a-z0-9A-Z]+)*?)*/?$", path); match {
 		return true
 	}
 

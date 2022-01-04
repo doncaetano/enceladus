@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/rhuancaetano/enceladus/internal/auth/usecases/createauthtoken"
+	"github.com/rhuancaetano/enceladus/internal/auth/usecases/getviewer"
 	"github.com/rhuancaetano/enceladus/internal/auth/usecases/updateauthtoken"
 	"github.com/rhuancaetano/enceladus/pkg/router"
 )
@@ -22,6 +23,9 @@ func GetRouter() (*router.Router, error) {
 		log.Fatal(err.Error())
 	}
 	if err = router.Put("/", updateauthtoken.UpdateAuthTokenController); err != nil {
+		log.Fatal(err.Error())
+	}
+	if err = router.Get("/:accessToken", getviewer.GetViewerController); err != nil {
 		log.Fatal(err.Error())
 	}
 

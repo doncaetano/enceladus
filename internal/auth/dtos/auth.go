@@ -22,6 +22,13 @@ type UserDTO struct {
 	Password string `json:"password"`
 }
 
+type ViewerDTO struct {
+	Id        string `json:"id"`
+	Email     string `json:"email"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+}
+
 type CreatedTokenDTO struct {
 	Id string `json:"id"`
 }
@@ -43,4 +50,5 @@ type Repo interface {
 	DeactivateUserTokensByUserId(userId string) error
 	DeactivateAccessTokenByRefreshTokenId(refreshTokenId string) error
 	CheckIfActiveRefreshTokenExist(refreshTokenId string) (bool, error)
+	GetViewerByUserId(id string) (*ViewerDTO, error)
 }
