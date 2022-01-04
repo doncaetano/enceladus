@@ -3,8 +3,8 @@ package router
 import (
 	"log"
 
-	authrouter "github.com/rhuancaetano/enceladus/internal/auth/router"
-	userrouter "github.com/rhuancaetano/enceladus/internal/user/router"
+	authrouter "github.com/rhuancaetano/enceladus/internal/models/auth/router"
+	userrouter "github.com/rhuancaetano/enceladus/internal/models/user/router"
 	"github.com/rhuancaetano/enceladus/pkg/router"
 )
 
