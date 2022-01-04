@@ -12,6 +12,7 @@ type Environment struct {
 	POSTGRES_USER     string `env:"required"`
 	POSTGRES_PASSWORD string `env:"required"`
 	POSTGRES_DB       string `env:"required"`
+	JWT_SECRET        string `env:"required"`
 }
 
 var environment *Environment
@@ -28,6 +29,7 @@ func GetEnvironment() *Environment {
 			POSTGRES_USER:     os.Getenv("POSTGRES_USER"),
 			POSTGRES_PASSWORD: os.Getenv("POSTGRES_PASSWORD"),
 			POSTGRES_DB:       os.Getenv("POSTGRES_DB"),
+			JWT_SECRET:        os.Getenv("JWT_SECRET"),
 		}
 	}
 

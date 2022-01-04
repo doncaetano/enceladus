@@ -31,8 +31,8 @@ func (ur *PostgresUserRepo) FindByEmail(email string) (*dtos.UserDTO, error) {
 	}
 	defer rows.Close()
 
-	var user dtos.UserDTO
 	if rows.Next() {
+		var user dtos.UserDTO
 		err = rows.Scan(&user.Id, &user.FirstName, &user.LastName, &user.Email, &user.IsActive, &user.CreatedAt, &user.UpdatedAt)
 		if err != nil {
 			log.Println(err.Error())
@@ -58,8 +58,8 @@ func (ur *PostgresUserRepo) FindById(id string) (*dtos.UserDTO, error) {
 	}
 	defer rows.Close()
 
-	var user dtos.UserDTO
 	if rows.Next() {
+		var user dtos.UserDTO
 		err = rows.Scan(&user.Id, &user.FirstName, &user.LastName, &user.Email, &user.IsActive, &user.CreatedAt, &user.UpdatedAt)
 		if err != nil {
 			log.Println(err.Error())
