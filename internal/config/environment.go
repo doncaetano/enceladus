@@ -1,10 +1,12 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/rhuancaetano/enceladus/pkg/envalid"
 )
 
 type Environment struct {
@@ -15,23 +17,20 @@ type Environment struct {
 	JWT_SECRET        string `env:"required"`
 }
 
-var environment *Environment
+var environment = &Environment{}
 
 func GetEnvironment() *Environment {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	if environment == nil {
-		environment = &Environment{
-			PORT:              os.Getenv("PORT"),
-			POSTGRES_USER:     os.Getenv("POSTGRES_USER"),
-			POSTGRES_PASSWORD: os.Getenv("POSTGRES_PASSWORD"),
-			POSTGRES_DB:       os.Getenv("POSTGRES_DB"),
-			JWT_SECRET:        os.Getenv("JWT_SECRET"),
+	if env, ok := os.LookupEnv("ENV"); ok {
+		if err := godotenv.Load(fmt.Sprintf(".env.%s", env)); err != nil {
+			log.Fatalf("Error loading .env.%s file", env)
+		}
+	} else {
+		if err := godotenv.Load(); err != nil {
+			log.Fatal("Error loading .env file")
 		}
 	}
+
+	envalid.GetEnvironmentVariables(environment)
 
 	return environment
 }
