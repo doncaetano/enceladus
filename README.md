@@ -61,6 +61,7 @@ go mod download
 ## Run
 
 There are two different ways to run the application, you can run the api locally and the postgres database in the container or run the containerized application.
+To play with the application you can use the Insomnia collection in the docs folder, or create your own requests using curl, postman, etc...
 
 ### API locally:
 
