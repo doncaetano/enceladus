@@ -9,11 +9,16 @@ import (
 	"github.com/rhuancaetano/enceladus/internal/utils/encrypt"
 )
 
-type CreateUserUseCase struct {
-	repo dtos.Repo
+type Repo interface {
+	CreateUser(data *dtos.CreateUserDTO) (*dtos.UserDTO, error)
+	FindByEmail(email string) (*dtos.UserDTO, error)
 }
 
-func NewCreateUserUseCase(r dtos.Repo) *CreateUserUseCase {
+type CreateUserUseCase struct {
+	repo Repo
+}
+
+func NewCreateUserUseCase(r Repo) *CreateUserUseCase {
 	return &CreateUserUseCase{
 		repo: r,
 	}

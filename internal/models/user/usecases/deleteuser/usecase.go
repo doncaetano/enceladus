@@ -3,15 +3,18 @@ package deleteuser
 import (
 	"regexp"
 
-	"github.com/rhuancaetano/enceladus/internal/models/user/dtos"
 	"github.com/rhuancaetano/enceladus/internal/shared/usecase"
 )
 
-type DeleteUserUseCase struct {
-	repo dtos.Repo
+type Repo interface {
+	DeleteUser(id string) error
 }
 
-func NewDeleteUserUseCase(r dtos.Repo) *DeleteUserUseCase {
+type DeleteUserUseCase struct {
+	repo Repo
+}
+
+func NewDeleteUserUseCase(r Repo) *DeleteUserUseCase {
 	return &DeleteUserUseCase{
 		repo: r,
 	}

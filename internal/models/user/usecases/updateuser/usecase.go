@@ -9,11 +9,17 @@ import (
 	"github.com/rhuancaetano/enceladus/internal/utils/encrypt"
 )
 
-type UpdateUserUseCase struct {
-	repo dtos.Repo
+type Repo interface {
+	FindByEmail(email string) (*dtos.UserDTO, error)
+	FindById(id string) (*dtos.UserDTO, error)
+	UpdateUser(data *dtos.UpdateUserDTO) (*dtos.UserDTO, error)
 }
 
-func NewUpdateUserUseCase(r dtos.Repo) *UpdateUserUseCase {
+type UpdateUserUseCase struct {
+	repo Repo
+}
+
+func NewUpdateUserUseCase(r Repo) *UpdateUserUseCase {
 	return &UpdateUserUseCase{
 		repo: r,
 	}

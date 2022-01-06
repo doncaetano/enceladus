@@ -7,11 +7,15 @@ import (
 	"github.com/rhuancaetano/enceladus/internal/shared/usecase"
 )
 
-type GetUserUseCase struct {
-	repo dtos.Repo
+type Repo interface {
+	FindById(id string) (*dtos.UserDTO, error)
 }
 
-func NewGetUserUseCase(r dtos.Repo) *GetUserUseCase {
+type GetUserUseCase struct {
+	repo Repo
+}
+
+func NewGetUserUseCase(r Repo) *GetUserUseCase {
 	return &GetUserUseCase{
 		repo: r,
 	}

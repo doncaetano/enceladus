@@ -25,11 +25,3 @@ type UpdateUserDTO struct {
 	Password  string `json:"password"`
 	IsActive  bool   `json:"isActive"`
 }
-
-type Repo interface {
-	CreateUser(data *CreateUserDTO) (*UserDTO, error)
-	FindByEmail(email string) (*UserDTO, error)
-	FindById(id string) (*UserDTO, error)
-	UpdateUser(data *UpdateUserDTO) (*UserDTO, error)
-	DeleteUser(id string) error
-}
