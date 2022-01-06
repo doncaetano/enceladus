@@ -14,6 +14,7 @@ type Environment struct {
 	POSTGRES_USER     string `env:"required"`
 	POSTGRES_PASSWORD string `env:"required"`
 	POSTGRES_DB       string `env:"required"`
+	POSTGRES_HOST     string `env:"required"`
 	JWT_SECRET        string `env:"required"`
 }
 
