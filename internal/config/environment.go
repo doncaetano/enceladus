@@ -30,7 +30,7 @@ func GetEnvironment() *Environment {
 		}
 	}
 
-	envalid.GetEnvironmentVariables(environment)
+	envalid.GetEnvironmentVariables(environment, os.LookupEnv)
 
 	return environment
 }

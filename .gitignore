@@ -33,3 +33,4 @@ docker
 
 ### Environments ###
 .env
+!.env.test

@@ -3,20 +3,23 @@ package envalid
 import (
 	"fmt"
 	"log"
-	"os"
 	"reflect"
 	"strconv"
 	"strings"
 )
 
-func GetEnvironmentVariables(envType interface{}) {
+func GetEnvironmentVariables(envType interface{}, lookupEnv func(key string) (string, bool)) {
 	if reflect.ValueOf(envType).Kind() != reflect.Ptr || reflect.ValueOf(envType).Elem().Kind() != reflect.Struct {
-		log.Fatalln("invalid input for GetEnvironmentVariables")
+		log.Panicln("invalid input for GetEnvironmentVariables")
 	}
 
 	structElement := reflect.ValueOf(envType).Elem()
 	for i := 0; i < structElement.NumField(); i++ {
 		field := reflect.Indirect(reflect.ValueOf(envType)).Type().Field(i)
+
+		if !IsValidType(structElement.Field(i).Type().String()) {
+			log.Panicf("type '%s' is not supported by this package\n", structElement.Field(i).Type().String())
+		}
 
 		envTag := field.Tag.Get("env")
 		rules := make(map[string]string)
@@ -28,26 +31,23 @@ func GetEnvironmentVariables(envType interface{}) {
 				rules[arr[0]] = arr[1]
 			} else {
 				if arr[0] == "default" {
-					log.Fatalln("'default' tag should have a value")
+					log.Panicln("'default' tag should have a value")
 				}
 
 				rules[arr[0]] = ""
 			}
 		}
 
-		envValue, hasEnv := os.LookupEnv(field.Name)
+		envValue, hasEnv := lookupEnv(field.Name)
 
 		if _, hasRule := rules["required"]; hasRule && !hasEnv {
-			log.Fatalf("environment property %s is required", field.Name)
+			log.Panicf("environment property %s is required\n", field.Name)
 		}
 
 		if value, hasRule := rules["default"]; hasRule && !hasEnv {
-			if !structElement.Field(i).CanSet() {
-				log.Fatalln("struct properties must be addresable")
-			}
 
 			if reflectValue, err := convertValueToType(field.Name, field.Type, value); err != nil {
-				log.Fatalln(err.Error())
+				log.Panicln(err.Error())
 			} else {
 				structElement.Field(i).Set(reflectValue)
 			}
@@ -55,7 +55,7 @@ func GetEnvironmentVariables(envType interface{}) {
 
 		if hasEnv {
 			if reflectValue, err := convertValueToType(field.Name, field.Type, envValue); err != nil {
-				log.Fatalln(err.Error())
+				log.Panicln(err.Error())
 			} else {
 				structElement.Field(i).Set(reflectValue)
 			}
@@ -105,5 +105,23 @@ func convertValueToType(fieldName string, rt reflect.Type, value string) (reflec
 	}
 
 	return reflect.ValueOf(""), fmt.Errorf("error while converting %s of field '%s' to %s", value, fieldName, rt.String())
+}
 
+func IsValidType(t string) bool {
+	validTypes := map[string]bool{
+		"string":  true,
+		"int":     true,
+		"int8":    true,
+		"int16":   true,
+		"int32":   true,
+		"int64":   true,
+		"float32": true,
+		"float64": true,
+		"bool":    true,
+	}
+
+	if _, isValid := validTypes[t]; isValid {
+		return true
+	}
+	return false
 }
