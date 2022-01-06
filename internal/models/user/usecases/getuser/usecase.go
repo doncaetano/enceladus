@@ -21,7 +21,7 @@ func NewGetUserUseCase(r Repo) *GetUserUseCase {
 	}
 }
 
-func (uc *GetUserUseCase) execute(id string) (*dtos.UserDTO, *usecase.UseCaseError) {
+func (uc *GetUserUseCase) Execute(id string) (*dtos.UserDTO, *usecase.UseCaseError) {
 	reg := regexp.MustCompile("^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
 	if id == "" || !reg.MatchString(id) {
 		return nil, usecase.BadRequestError("invalid user id")

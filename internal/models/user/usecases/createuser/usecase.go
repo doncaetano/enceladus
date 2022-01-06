@@ -24,7 +24,7 @@ func NewCreateUserUseCase(r Repo) *CreateUserUseCase {
 	}
 }
 
-func (uc *CreateUserUseCase) execute(data *dtos.CreateUserDTO) (*dtos.UserDTO, *usecase.UseCaseError) {
+func (uc *CreateUserUseCase) Execute(data *dtos.CreateUserDTO) (*dtos.UserDTO, *usecase.UseCaseError) {
 	if data.FirstName == "" {
 		return nil, usecase.BadRequestError("invalid user first name")
 	}

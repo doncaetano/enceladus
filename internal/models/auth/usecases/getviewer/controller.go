@@ -26,7 +26,7 @@ func GetViewerController(res http.ResponseWriter, req *http.Request, ctx *router
 	}
 
 	getViewerUseCase := NewGetViewerUseCase(repo.NewPostgresAuthRepo())
-	viewer, err := getViewerUseCase.execute(accessToken)
+	viewer, err := getViewerUseCase.Execute(accessToken)
 	if err != nil {
 		res.WriteHeader(request.HandleErrorStatus(err.Type))
 		res.Write([]byte(fmt.Sprintf(`{ "error": "%s" }`, err.Message)))

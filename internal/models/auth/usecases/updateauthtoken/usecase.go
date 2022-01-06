@@ -28,7 +28,7 @@ func NewUpdateAuthTokenUseCase(r Repo) *UpdateAuthTokenUseCase {
 	}
 }
 
-func (uc *UpdateAuthTokenUseCase) execute(data *dtos.UpdateAuthDTO) (*dtos.AuthTokenDTO, *usecase.UseCaseError) {
+func (uc *UpdateAuthTokenUseCase) Execute(data *dtos.UpdateAuthDTO) (*dtos.AuthTokenDTO, *usecase.UseCaseError) {
 	env := config.GetEnvironment()
 	token, err := jwt.Parse(data.RefreshToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

@@ -25,7 +25,7 @@ func DeleteUserController(res http.ResponseWriter, req *http.Request, ctx *route
 	}
 
 	deleteUserUseCase := NewDeleteUserUseCase(repo.NewPostgresUserRepo())
-	err := deleteUserUseCase.execute(id)
+	err := deleteUserUseCase.Execute(id)
 	if err != nil {
 		res.WriteHeader(request.HandleErrorStatus(err.Type))
 		res.Write([]byte(fmt.Sprintf(`{ "error": "%s" }`, err.Message)))

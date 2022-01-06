@@ -26,7 +26,7 @@ func UpdateUserController(res http.ResponseWriter, req *http.Request, ctx *route
 	}
 
 	updateUserUseCase := NewUpdateUserUseCase(repo.NewPostgresUserRepo())
-	user, err := updateUserUseCase.execute(&userData)
+	user, err := updateUserUseCase.Execute(&userData)
 	if err != nil {
 		res.WriteHeader(request.HandleErrorStatus(err.Type))
 		res.Write([]byte(fmt.Sprintf(`{ "error": "%s" }`, err.Message)))

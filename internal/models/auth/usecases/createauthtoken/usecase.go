@@ -30,7 +30,7 @@ func NewCreateAuthTokenUseCase(r Repo) *CreateAuthTokenUseCase {
 	}
 }
 
-func (uc *CreateAuthTokenUseCase) execute(data *dtos.CreateAuthTokenDTO) (*dtos.AuthTokenDTO, *usecase.UseCaseError) {
+func (uc *CreateAuthTokenUseCase) Execute(data *dtos.CreateAuthTokenDTO) (*dtos.AuthTokenDTO, *usecase.UseCaseError) {
 	reg := regexp.MustCompile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)")
 	if data.Email == "" || !reg.MatchString(data.Email) {
 		return nil, usecase.BadRequestError("invalid user email")

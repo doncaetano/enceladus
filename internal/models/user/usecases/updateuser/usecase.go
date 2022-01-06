@@ -25,7 +25,7 @@ func NewUpdateUserUseCase(r Repo) *UpdateUserUseCase {
 	}
 }
 
-func (uc *UpdateUserUseCase) execute(data *dtos.UpdateUserDTO) (*dtos.UserDTO, *usecase.UseCaseError) {
+func (uc *UpdateUserUseCase) Execute(data *dtos.UpdateUserDTO) (*dtos.UserDTO, *usecase.UseCaseError) {
 	idReg := regexp.MustCompile("^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
 	if data.Id == "" || !idReg.MatchString(data.Id) {
 		return nil, usecase.BadRequestError("invalid user id")

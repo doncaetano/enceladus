@@ -26,7 +26,7 @@ func UpdateAuthTokenController(res http.ResponseWriter, req *http.Request, ctx *
 	}
 
 	updateAuthTokenUseCase := NewUpdateAuthTokenUseCase(repo.NewPostgresAuthRepo())
-	authTokens, err := updateAuthTokenUseCase.execute(&authData)
+	authTokens, err := updateAuthTokenUseCase.Execute(&authData)
 	if err != nil {
 		res.WriteHeader(request.HandleErrorStatus(err.Type))
 		res.Write([]byte(fmt.Sprintf(`{ "error": "%s" }`, err.Message)))

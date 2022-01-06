@@ -23,7 +23,7 @@ func NewGetViewerUseCase(r Repo) *GetViewerUseCase {
 	}
 }
 
-func (uc *GetViewerUseCase) execute(accessToken string) (*dtos.ViewerDTO, *usecase.UseCaseError) {
+func (uc *GetViewerUseCase) Execute(accessToken string) (*dtos.ViewerDTO, *usecase.UseCaseError) {
 	env := config.GetEnvironment()
 	token, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

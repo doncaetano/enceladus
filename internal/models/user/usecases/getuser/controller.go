@@ -26,7 +26,7 @@ func GetUserController(res http.ResponseWriter, req *http.Request, ctx *router.C
 	}
 
 	getUserUseCase := NewGetUserUseCase(repo.NewPostgresUserRepo())
-	user, err := getUserUseCase.execute(id)
+	user, err := getUserUseCase.Execute(id)
 	if err != nil {
 		res.WriteHeader(request.HandleErrorStatus(err.Type))
 		res.Write([]byte(fmt.Sprintf(`{ "error": "%s" }`, err.Message)))
