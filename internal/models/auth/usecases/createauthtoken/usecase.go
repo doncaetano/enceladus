@@ -13,11 +13,18 @@ import (
 	"github.com/rhuancaetano/enceladus/internal/utils/encrypt"
 )
 
-type CreateAuthTokenUseCase struct {
-	repo dtos.Repo
+type Repo interface {
+	CreateRefreshToken(data *dtos.CreateRefreshTokenDTO) (*dtos.CreatedTokenDTO, error)
+	CreateAccessToken(data *dtos.CreateAccessTokenDTO) (*dtos.CreatedTokenDTO, error)
+	GetUserByEmail(email string) (*dtos.UserDTO, error)
+	DeactivateUserTokensByUserId(userId string) error
 }
 
-func NewCreateAuthTokenUseCase(r dtos.Repo) *CreateAuthTokenUseCase {
+type CreateAuthTokenUseCase struct {
+	repo Repo
+}
+
+func NewCreateAuthTokenUseCase(r Repo) *CreateAuthTokenUseCase {
 	return &CreateAuthTokenUseCase{
 		repo: r,
 	}

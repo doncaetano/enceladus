@@ -9,11 +9,15 @@ import (
 	"github.com/rhuancaetano/enceladus/internal/shared/usecase"
 )
 
-type GetViewerUseCase struct {
-	repo dtos.Repo
+type Repo interface {
+	GetViewerByUserId(id string) (*dtos.ViewerDTO, error)
 }
 
-func NewGetViewerUseCase(r dtos.Repo) *GetViewerUseCase {
+type GetViewerUseCase struct {
+	repo Repo
+}
+
+func NewGetViewerUseCase(r Repo) *GetViewerUseCase {
 	return &GetViewerUseCase{
 		repo: r,
 	}

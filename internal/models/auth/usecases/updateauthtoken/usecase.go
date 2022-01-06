@@ -12,11 +12,17 @@ import (
 	"github.com/rhuancaetano/enceladus/internal/shared/usecase"
 )
 
-type UpdateAuthTokenUseCase struct {
-	repo dtos.Repo
+type Repo interface {
+	CreateAccessToken(data *dtos.CreateAccessTokenDTO) (*dtos.CreatedTokenDTO, error)
+	DeactivateAccessTokenByRefreshTokenId(refreshTokenId string) error
+	CheckIfActiveRefreshTokenExist(refreshTokenId string) (bool, error)
 }
 
-func NewUpdateAuthTokenUseCase(r dtos.Repo) *UpdateAuthTokenUseCase {
+type UpdateAuthTokenUseCase struct {
+	repo Repo
+}
+
+func NewUpdateAuthTokenUseCase(r Repo) *UpdateAuthTokenUseCase {
 	return &UpdateAuthTokenUseCase{
 		repo: r,
 	}

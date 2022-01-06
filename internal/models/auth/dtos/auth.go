@@ -42,13 +42,3 @@ type CreateAccessTokenDTO struct {
 	RefreshTokenId string    `json:"refreshTokenId"`
 	ExpiresAt      time.Time `json:"expiresAt"`
 }
-
-type Repo interface {
-	CreateRefreshToken(data *CreateRefreshTokenDTO) (*CreatedTokenDTO, error)
-	CreateAccessToken(data *CreateAccessTokenDTO) (*CreatedTokenDTO, error)
-	GetUserByEmail(email string) (*UserDTO, error)
-	DeactivateUserTokensByUserId(userId string) error
-	DeactivateAccessTokenByRefreshTokenId(refreshTokenId string) error
-	CheckIfActiveRefreshTokenExist(refreshTokenId string) (bool, error)
-	GetViewerByUserId(id string) (*ViewerDTO, error)
-}
